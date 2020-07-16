@@ -263,3 +263,10 @@ atomic.StoreUint64(&i64,5) //函数会把值赋到指针中
 1. 对一个channel的发送操作 happens-before 相应channel的接收操作完成
 2.  关闭一个channel happens-before 从该Channel接收到最后的返回值0 
 3. 不带缓冲的channel的接收操作 happens-before 相应channel的发送操作完成
+
+## 关于Go并发
+
+1. 通过golang中的 goroutine 与sync.Mutex进行，并发同步。看起来协程似乎是同一时间进行，但在微观上，实则在同一时间只有一个协程，协程交替运行，达到了宏观上的同一时间效果。
+2. goroutine之间通过 channel进行通信,channel是和类型相关的 可以理解为channel是一种类型安全的管道。
+3. 带缓冲的channel与不带缓冲channel区别：当生产者channel加入值后，消费者才会取出，如果消费者取出后则会阻塞因为生产者没有还没有存入数据，而生产者赋值后也会阻塞直到消费者取出。而带缓冲的channel，生产者可以一直存入数据直到达到设置的容量前都不会阻塞，消费者就可以一直取出数据而不需要重新等待生产者存入新的数据。
+4. 用了channel的函数一定要开协程，否则会阻塞
